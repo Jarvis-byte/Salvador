@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Flower Hunt</string>
+    <string name="facebook_app_id">128247052531799</string>
+    <string name="fb_login_protocol_scheme">fb128247052531799</string>
+
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+
 </resources>

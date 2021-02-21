@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "260181048046",
+    "project_id": "salvador-nature-app",
+    "storage_bucket": "salvador-nature-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260181048046:android:23e96372f6c441649551ff",
+        "android_client_info": {
+          "package_name": "com.flowerhunt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "260181048046-pesdm8pl1lqkrg78kc6g0peeokhn5hf4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9YPnXSTooRT4SDqFOgkpHfhRhUTBLEb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "260181048046-pesdm8pl1lqkrg78kc6g0peeokhn5hf4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
