@@ -34,7 +34,7 @@
                 android:layout_marginTop="90dp"
                 android:fontFamily="@font/poppins_medium"
                 android:gravity="start"
-                android:text="Welcome Back 😄"
+                android:text="Welcome Back "
                 android:textColor="#fff"
                 android:textSize="20dp" />
 

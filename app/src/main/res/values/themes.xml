@@ -10,7 +10,7 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="colorPrimaryDark">#226420</item>
+        <item name="colorPrimaryDark">#7EB45C</item>
         <!-- Customize your theme here. -->
     </style>
     <style name="viewParent">

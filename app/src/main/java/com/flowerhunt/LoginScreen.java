@@ -1,14 +1,18 @@
 package com.flowerhunt;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +47,8 @@ import java.util.Calendar;
 
 public class LoginScreen extends AppCompatActivity {
     private static final String EMAIL = "email";
+
+    public Dialog mDialog;
     TextView new_user_login, greeting_message, welcome_back, btn_login, btn_forgot_password;
     RelativeLayout gmail_login, twitter_login, RRfb, RL_Email, RL_Password;
     ImageView fb, img_app_icon;
@@ -52,6 +58,7 @@ public class LoginScreen extends AppCompatActivity {
     FirebaseFirestore database;
     FirebaseUser firebaseUser;
     EditText username_input, pass;
+    ProgressBar progressBar;
     private GoogleSignInClient mGoogleSignInClient;
     private String TAG = "LoginScreen";
     private FirebaseAuth mAuth;
@@ -110,17 +117,20 @@ public class LoginScreen extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                showProgress();
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
             public void onCancel() {
+                hideProgress();
                 Toast.makeText(LoginScreen.this, "Cancelled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
+                hideProgress();
                 Toast.makeText(LoginScreen.this, exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -145,20 +155,26 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     private void Login_using_email() {
+        showProgress();
+
         String email = username_input.getText().toString();
         String password = pass.getText().toString();
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(LoginScreen.this, "Login Success", Toast.LENGTH_SHORT).show();
+                    hideProgress();
+                    LoadHomedashboard();
+
                 } else {
+                    hideProgress();
                     Toast.makeText(LoginScreen.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
         });
     }
+
 
     private void animate() {
         RRfb.setTranslationY(300);
@@ -246,12 +262,14 @@ public class LoginScreen extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(LoginScreen.this, "Hello " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                            hideProgress();
+                          //  Log.d(TAG, "signInWithCredential:success");
+
+                            LoadHomedashboard();
 
                         } else {
                             // If sign in fails, display a message to the user.
+                            hideProgress();
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginScreen.this, "Authentication failed./n" + task.getException(),
                                     Toast.LENGTH_SHORT).show();
@@ -280,6 +298,7 @@ public class LoginScreen extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            showProgress();
             handleSignResult(task);
         }
     }
@@ -287,7 +306,8 @@ public class LoginScreen extends AppCompatActivity {
     private void handleSignResult(Task<GoogleSignInAccount> task) {
         try {
             GoogleSignInAccount acc = task.getResult(ApiException.class);
-            Toast.makeText(this, "Signed In Successfully", Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(this, "Signed In Successfully", Toast.LENGTH_SHORT).show();
+
             FirebaseGoogleAuth(acc);
 
 
@@ -304,13 +324,38 @@ public class LoginScreen extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
-                    Toast.makeText(LoginScreen.this, "Hello !! " + user.getDisplayName() + "", Toast.LENGTH_SHORT).show();
+                    hideProgress();
+                    LoadHomedashboard();
 
 
                 } else {
-                    Toast.makeText(LoginScreen.this, "Failed Firebase Login", Toast.LENGTH_SHORT).show();
+                    hideProgress();
+                    Toast.makeText(LoginScreen.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
+    private void LoadHomedashboard() {
+        startActivity(new Intent(LoginScreen.this, HomeDashboard.class));
+        finish();
+    }
+
+    private void showProgress() {
+        mDialog = new Dialog(this);
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.setContentView(R.layout.custom_progress_layout);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCancelable(true);
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.show();
+    }
+
+    private void hideProgress() {
+        if (mDialog != null) {
+            mDialog.dismiss();
+            mDialog = null;
+        }
+    }
+
 }
