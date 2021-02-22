@@ -8,7 +8,9 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/app_icon3"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FlowerHunt">
+        android:theme="@style/Theme.FlowerHunt"
+        android:usesCleartextTraffic="true">
+
         <activity android:name=".RegisterActivity"></activity>
         <activity android:name=".LoginScreen">
             <intent-filter>

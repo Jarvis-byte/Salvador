@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#5CA654"
+
     tools:context=".RegisterActivity">
 
     <ScrollView
@@ -15,112 +15,151 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:orientation="vertical"
-            android:padding="20dp">
 
-            <RelativeLayout
+            android:orientation="vertical">
+
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="273dp"
+                android:background="@drawable/blue_bg"
+                android:backgroundTint="#7EB45C">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="#FFDC8A"
+                    android:elevation="6dp"
+                    android:padding="20dp"
+                    app:cardCornerRadius="100dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/man"
+                        android:padding="30dp" />
+                </androidx.cardview.widget.CardView>
+
 
                 <TextView
-                    style="@style/viewParent.headerText.NoMode"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="30dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="Here’s\nyour first\nstep with \nus! "
-                    android:textColor="@color/whiteTextColor" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                <ImageView
-                    android:layout_width="250dp"
-                    android:layout_height="200dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginEnd="-60dp"
-                    android:src="@drawable/app_icon3" />
-            </RelativeLayout>
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40dp"
+                    android:text="It is the perfect day to join us"
+                    android:textColor="#111"
+                    android:textSize="20dp" />
 
-            <androidx.cardview.widget.CardView
+            </FrameLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:cardBackgroundColor="@color/whiteTextColor"
-                app:cardCornerRadius="10dp">
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Full Name"
+                app:boxStrokeColor="#4AAC4F">
 
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputtxtname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical">
+                    android:inputType="textPersonName" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputName"
-                        style="@style/parent"
-                        android:layout_marginTop="@dimen/loginViewsMargin">
+            </com.google.android.material.textfield.TextInputLayout>
 
-                        <EditText
-                            android:id="@+id/editTextName"
-                            style="@style/modifiedEditText"
-                            android:backgroundTint="#fff"
-                            android:hint="Name"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/email_address"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Email Id"
+                app:boxStrokeColor="#4AAC4F">
 
-                            android:inputType="textPersonName"
-                            android:maxLines="1" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputtxtemail_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputEmail"
-                        style="@style/parent"
-                        android:layout_marginTop="@dimen/loginViewsMargin">
-
-                        <EditText
-                            android:id="@+id/editTextEmail"
-                            style="@style/modifiedEditText"
-                            android:backgroundTint="#fff"
-                            android:hint="@string/login_email_hint"
-                            android:inputType="textEmailAddress"
-                            android:maxLines="1" />
-                    </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputPassword"
-                        style="@style/parent"
-                        android:layout_marginTop="@dimen/loginViewsMargin">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/Password"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="8dp"
+                android:hint="Password"
+                app:boxStrokeColor="#4AAC4F"
+                app:passwordToggleEnabled="true">
 
-                        <EditText
-                            android:id="@+id/editTextPassword"
-                            style="@style/modifiedEditText"
-                            android:backgroundTint="#fff"
-                            android:hint="@string/login_password_hint"
-                            android:inputType="textPassword"
-                            android:maxLines="1" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputtxtPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
 
-                    <TextView
-                        style="@style/parent"
-                        android:layout_marginTop="@dimen/loginViewsMargin"
-                        android:fontFamily="@font/poppins_medium"
-                        android:text="Already have an account?"
-                        android:textAlignment="center"
-                        android:textColor="#1566e0"
-                        android:onClick="onLoginClick"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/btn_sign_up"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="62dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="62dp"
+                android:background="@drawable/blue_fill__rounded_color"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="Sign Up"
+                android:textColor="#ffffff"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="If you are already a Salvador"
+                android:textColor="#111"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/login_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="62dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="62dp"
+                android:background="@drawable/blue_fill__rounded_color"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="Login"
+                android:textColor="#ffffff"
+                android:textSize="15sp" />
         </LinearLayout>
     </ScrollView>
 
-    <!--    <View-->
-    <!--        android:layout_width="11dp"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_alignParentRight="true"-->
-    <!--        android:layout_marginTop="20dp"-->
-    <!--        android:background="@drawable/ic_side_bg" />-->
 
     <ImageView
         android:layout_width="wrap_content"

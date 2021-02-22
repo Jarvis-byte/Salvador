@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,29 +15,44 @@
             android:layout_width="match_parent"
             android:layout_height="273dp"
             android:background="@drawable/blue_bg"
-            android:backgroundTint="#5CA654">
+            android:backgroundTint="#7EB45C">
 
             <ImageView
+                android:id="@+id/img_app_icon"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 android:layout_gravity="end"
                 android:layout_marginTop="15dp"
-                android:layout_marginEnd="-50dp"
+                android:layout_marginEnd="-60dp"
                 android:src="@drawable/app_icon3" />
 
             <TextView
+                android:id="@+id/welcome_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="90dp"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="start"
+                android:text="Welcome Back 😄"
+                android:textColor="#fff"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/greeting_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="50dp"
                 android:fontFamily="@font/poppins_medium"
                 android:gravity="start"
-                android:text="Already\nhave an\nAccount?"
+                android:text="Hi...Good Morning"
                 android:textColor="#111"
-                android:textSize="30dp" />
+                android:textSize="20dp" />
         </FrameLayout>
 
         <RelativeLayout
+            android:id="@+id/RL_Email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="62dp"
@@ -71,6 +87,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/RL_Password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="62dp"
@@ -106,6 +123,7 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -122,6 +140,7 @@
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/btn_forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -134,9 +153,8 @@
         <TextView
             android:id="@+id/new_user_login"
             style="@style/parent"
-            android:layout_marginTop="@dimen/loginViewsMargin"
-
-            android:text="New user? Register Now"
+            android:layout_marginTop="30dp"
+            android:text="New user ! Register Now"
             android:textAlignment="center"
             android:textColor="#5CA654"
             android:textSize="17sp"
@@ -151,6 +169,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/LLExtraLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="13.7dp"
@@ -168,7 +187,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="6"
-                android:text="Use other Methods"
+                android:text="Or Login With"
                 android:textAlignment="center"
                 android:textColor="#111"
                 android:textSize="12sp" />
@@ -187,39 +206,97 @@
             android:layout_marginBottom="35dp"
             android:gravity="center"
             android:orientation="horizontal">
-            <FrameLayout
-                android:id="@+id/FrameLayout1"
-                android:layout_width="26.7dp"
-                android:layout_height="26.7dp"
-                android:layout_marginStart="25dp">
-                <com.facebook.login.widget.LoginButton
-                    android:id="@+id/login_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-                <ImageView
-                    android:id="@+id/fb"
-                    android:layout_width="26.7dp"
-                    android:layout_height="26.7dp"
-                    android:onClick="onClick"
-                    android:src="@drawable/fb" />
-            </FrameLayout>
 
 
-            <ImageView
+            <RelativeLayout
+                android:id="@+id/RRfb"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/rounded_profile_textview"
+                android:padding="5dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    app:cardCornerRadius="50dp">
+
+                    <com.facebook.login.widget.LoginButton
+                        android:id="@+id/login_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/fb"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:onClick="onClick"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/fb" />
+
+
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/gmail_login"
-                android:layout_width="26.7dp"
-                android:layout_height="26.7dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/google" />
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/rounded_profile_textview"
+                android:padding="5dp">
 
-            <ImageView
-                android:layout_width="26.7dp"
-                android:layout_height="26.7dp"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/twitter" />
+                <androidx.cardview.widget.CardView
 
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:padding="10dp"
+                    app:cardCornerRadius="50dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/google" />
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/twitter_login"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/rounded_profile_textview"
+                android:padding="5dp">
+
+                <androidx.cardview.widget.CardView
+
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:padding="10dp"
+                    app:cardCornerRadius="50dp">
+
+                    <ImageView
+
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/twitter" />
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 
