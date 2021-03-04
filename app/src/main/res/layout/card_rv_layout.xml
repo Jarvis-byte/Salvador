@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="120dp"
+                android:layout_height="130dp"
+                android:backgroundTint="#2F8F57"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="20dp">
+
+                <TextView
+                    android:id="@+id/flower_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="70dp"
+                    android:text="Rose"
+                    android:textColor="#fff" />
+
+                <TextView
+                    android:id="@+id/flower_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="90dp"
+
+                    android:text="4"
+                    android:textColor="#fff" />
+
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/flower_image"
+            android:layout_width="80dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+
+            android:layout_marginTop="-20dp"
+            android:src="@drawable/sunflower"
+
+            />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

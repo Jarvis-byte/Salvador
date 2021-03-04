@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
@@ -27,12 +28,14 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.flowerhunt.Model.UserDetails;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -59,6 +62,7 @@ public class LoginScreen extends AppCompatActivity {
     FirebaseUser firebaseUser;
     EditText username_input, pass;
     ProgressBar progressBar;
+    String userId, name;
     private GoogleSignInClient mGoogleSignInClient;
     private String TAG = "LoginScreen";
     private FirebaseAuth mAuth;
@@ -148,10 +152,17 @@ public class LoginScreen extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Login_using_email();
+                if (TextUtils.isEmpty(username_input.getText().toString())) {
+                    username_input.setError("Please Enter Your Email");
+                    username_input.requestFocus();
+                } else if (TextUtils.isEmpty(pass.getText().toString())) {
+                    pass.setError("Please Enter Your Password");
+                    pass.requestFocus();
+                } else {
+                    Login_using_email();
+                }
             }
         });
-
     }
 
     private void Login_using_email() {
@@ -261,9 +272,19 @@ public class LoginScreen extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                            userId = mAuth.getCurrentUser().getUid();
+                            UserDetails userDetails = new UserDetails(name, userId);
+                            database.collection("Users")
+                                    .document(userId).set(userDetails).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // Toast.makeText(LoginScreen.this, "Saved", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             // Sign in success, update UI with the signed-in user's information
                             hideProgress();
-                          //  Log.d(TAG, "signInWithCredential:success");
+                            //  Log.d(TAG, "signInWithCredential:success");
 
                             LoadHomedashboard();
 
@@ -306,8 +327,6 @@ public class LoginScreen extends AppCompatActivity {
     private void handleSignResult(Task<GoogleSignInAccount> task) {
         try {
             GoogleSignInAccount acc = task.getResult(ApiException.class);
-            //  Toast.makeText(this, "Signed In Successfully", Toast.LENGTH_SHORT).show();
-
             FirebaseGoogleAuth(acc);
 
 
@@ -318,12 +337,23 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     private void FirebaseGoogleAuth(GoogleSignInAccount acc) {
+
         AuthCredential authCredential = GoogleAuthProvider.getCredential(acc.getIdToken(), null);
         mAuth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    FirebaseUser user = mAuth.getCurrentUser();
+                    name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                    userId = mAuth.getCurrentUser().getUid();
+                    UserDetails userDetails = new UserDetails(name, userId);
+
+                    database.collection("Users")
+                            .document(userId).set(userDetails).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            //  Toast.makeText(LoginScreen.this, "Saved", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     hideProgress();
                     LoadHomedashboard();
 

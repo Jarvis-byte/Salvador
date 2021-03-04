@@ -4,14 +4,92 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CAE0BC"
+    android:background="#F6F9F5"
     tools:context=".HomeDashboard">
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/LLToolbar"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:background="@drawable/blue_bg"
-        android:backgroundTint="#7EB45C" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_pic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/rounded_profile_textview"
+            android:padding="5dp"
+            android:src="@drawable/man" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/click_image_top"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/circular"
+            android:padding="10dp"
+            android:src="@drawable/ic_baseline_camera_new" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="100dp"
+        android:text=""
+        android:textColor="#111"
+        android:textSize="20sp" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/name"
+        android:layout_marginTop="15dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="50dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/image_slider_card_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="20dp">
+
+                <com.denzcoskun.imageslider.ImageSlider
+                    android:id="@+id/image_slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:auto_cycle="true"
+                    app:corner_radius="20"
+                    app:delay="0"
+                    app:error_image="@drawable/plant1"
+                    app:period="3000" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/image_slider_card_layout"
+                android:layout_marginTop="10dp" />
+
+
+        </RelativeLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
 
     <Button
         android:id="@+id/click_image"
@@ -23,46 +101,10 @@
         android:background="@drawable/buttom_camera_back"
         android:drawableLeft="@drawable/ic_baseline_camera_24"
         android:drawablePadding="10dp"
-
         android:text="Click Image"
         android:textColor="#fff"
         android:textSize="20dp"
         app:backgroundTint="#7EB45C" />
 
-    <TextView
-        android:id="@+id/name_of_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="60dp"
-        android:text="Hello Arka"
-        android:textSize="20dp" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_pic"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="30dp"
-        android:src="@drawable/man" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="200dp"
-        android:background="@drawable/layout_rouund_top"
-        android:backgroundTint="#fff">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/layout_rouund_top">
-
-
-
-        </RelativeLayout>
-    </ScrollView>
 </RelativeLayout>

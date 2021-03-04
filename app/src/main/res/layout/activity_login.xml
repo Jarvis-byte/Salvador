@@ -64,6 +64,10 @@
                 android:id="@+id/username_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="2dp"
                 android:layout_toRightOf="@+id/username_icon"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_regular"
@@ -73,7 +77,6 @@
                 android:paddingLeft="17dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
-                android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="12sp" />
             <!-- ICON -->
             <ImageView
@@ -99,6 +102,10 @@
                 android:id="@+id/pass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="2dp"
                 android:layout_toRightOf="@+id/icon"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_regular"
@@ -109,7 +116,7 @@
                 android:paddingLeft="17dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
-                android:textCursorDrawable="@drawable/cursor_color"
+
                 android:textSize="12sp" />
             <!-- ICON -->
             <ImageView
@@ -154,9 +161,12 @@
             android:id="@+id/new_user_login"
             style="@style/parent"
             android:layout_marginTop="30dp"
+            android:background="@drawable/white_fill__rounded_color"
+            android:drawableEnd="@drawable/ic_baseline_arrow_right_24"
+            android:padding="5dp"
             android:text="New user ! Register Now"
             android:textAlignment="center"
-            android:textColor="#5CA654"
+            android:textColor="#7EB45C"
             android:textSize="17sp"
             android:textStyle="bold" />
     </LinearLayout>
