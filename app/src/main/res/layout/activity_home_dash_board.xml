@@ -21,7 +21,9 @@
             android:layout_marginStart="15dp"
             android:background="@drawable/rounded_profile_textview"
             android:padding="5dp"
-            android:src="@drawable/avater" />
+            android:src="@drawable/avater"
+            android:transitionName="example_transition"
+            />
 
         <Space
             android:layout_width="match_parent"
