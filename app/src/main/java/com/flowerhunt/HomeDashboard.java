@@ -2,13 +2,14 @@ package com.flowerhunt;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.transition.Fade;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,17 +17,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.models.SlideModel;
-import com.facebook.login.LoginManager;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.flowerhunt.Adapter.MyAdapter;
 import com.flowerhunt.Model.FlowerList;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
@@ -34,16 +42,20 @@ import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeDashboard extends AppCompatActivity {
+    public static final String MY_PREFS_NAME = "ProfilePic";
+    public static final String MY_PREFS_NAME2 = "Name";
     static final int REQUEST_IMAGE_CAPTURE = 1;
     FirebaseAuth auth;
     FirebaseUser user;
     ImageView profile_pic, click_image_top;
-    Button click_image;
+    ExtendedFloatingActionButton click_image;
     TextView name;
     RecyclerView recyclerView;
     MyAdapter myAdapter;
@@ -52,11 +64,26 @@ public class HomeDashboard extends AppCompatActivity {
     FirebaseFirestore mFirebaseFirestore = FirebaseFirestore.getInstance();
     String userId;
     String TAG = "FirebaseData";
+    String profilePicUrl;
+    NestedScrollView scrollView;
+    SharedPreferences.Editor editor;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_dash_board);
+
+        //Animation For next Activity
+        Fade fade = new Fade();
+        View decor = getWindow().getDecorView();
+        fade.excludeTarget(decor.findViewById(R.id.action_bar_container), true);
+        fade.excludeTarget(android.R.id.statusBarBackground, true);
+        fade.excludeTarget(android.R.id.navigationBarBackground, true);
+        getWindow().setEnterTransition(fade);
+        getWindow().setExitTransition(fade);
+        prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         auth = FirebaseAuth.getInstance();
         Task<GetTokenResult> token = auth.getAccessToken(true);
@@ -73,8 +100,14 @@ public class HomeDashboard extends AppCompatActivity {
 
 
         name = findViewById(R.id.name);
-
-
+        editor = prefs.edit();
+        if (!prefs.contains("Name")) {
+            Log.i("NoData", "NO");
+            getNameFromFirestore();
+        } else {
+            name.setText(prefs.getString("Name", ""));
+        }
+        scrollView = findViewById(R.id.scrollView);
         profile_pic = findViewById(R.id.profile_pic);
         click_image = findViewById(R.id.click_image);
         click_image_top = findViewById(R.id.click_image_top);
@@ -95,32 +128,58 @@ public class HomeDashboard extends AppCompatActivity {
         profile_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                auth.signOut();
-                LoginManager.getInstance().logOut();
-                startActivity(new Intent(HomeDashboard.this, LoginScreen.class));
-                finish();
+                Intent intent = new Intent(HomeDashboard.this, Profile.class);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        HomeDashboard.this, profile_pic, ViewCompat.getTransitionName(profile_pic));
+                startActivity(intent, options.toBundle());
             }
         });
         Log.i("Providers", String.valueOf(user.getProviderData()));
-
-
+        editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         if (auth.getCurrentUser().getPhotoUrl() != null) {
-            photoUrl = auth.getCurrentUser().getPhotoUrl().toString();
+            profilePicUrl = auth.getCurrentUser().getPhotoUrl().toString();
             for (UserInfo profile : auth.getCurrentUser().getProviderData()) {
                 if (profile.getProviderId().equals("facebook.com")) {
-                    String facebookUserId = profile.getUid();
-                    photoUrl = "https://graph.facebook.com/" + facebookUserId + "/picture?height=500";
+//                    String facebookUserId = profile.getUid();
+                    Bundle params = new Bundle();
+                    params.putString("fields", "id,picture.type(large)");
+                    new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
+                            new GraphRequest.Callback() {
+                                @Override
+                                public void onCompleted(GraphResponse response) {
+                                    if (response != null) {
+                                        try {
+                                            JSONObject data = response.getJSONObject();
+                                            if (data.has("picture")) {
+                                                profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
+                                                editor.putString("ProfilePic", profilePicUrl);
+                                                editor.apply();
+                                                Glide.with(HomeDashboard.this)
+                                                        .load(profilePicUrl)
+                                                        .fitCenter()
+                                                        .placeholder(R.drawable.avater)
+                                                        .into(profile_pic);
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }).executeAsync();
+                } else {
+
+                    editor.putString("ProfilePic", profilePicUrl);
+                    editor.apply();
+                    Glide.with(HomeDashboard.this)
+                            .load(profilePicUrl)
+                            .fitCenter()
+                            .placeholder(R.drawable.avater)
+                            .into(profile_pic);
                 }
             }
-            Log.i("Image", photoUrl);
+
+
         }
-
-
-        Glide.with(HomeDashboard.this)
-                .load(photoUrl)
-                .fitCenter()
-                .placeholder(R.drawable.man)
-                .into(profile_pic);
 
 
         //Recycler View
@@ -143,12 +202,32 @@ public class HomeDashboard extends AppCompatActivity {
 
         myAdapter = new MyAdapter(this, list);
         recyclerView.setAdapter(myAdapter);
+        scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > oldScrollY + 12 && click_image.isShown()) {
+                    click_image.hide();
+                }
+
+                // the delay of the extension of the FAB is set for 12 items
+                if (scrollY < oldScrollY - 12 && !click_image.isShown()) {
+                    click_image.show();
+                }
+
+                // if the nestedScrollView is at the first item of the list then the
+                // floating action should be in show state
+                if (scrollY == 0) {
+                    click_image.show();
+                }
+
+            }
+        });
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        getNameFromFirestore();
     }
 
     private void getNameFromFirestore() {
@@ -161,6 +240,10 @@ public class HomeDashboard extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document != null && document.exists()) {
                                 name.setText("Hi " + document.getString("name"));
+                                editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+
+                                editor.putString("Name", "Hi " + document.getString("name"));
+                                editor.apply();
 
                             } else {
                                 Toast.makeText(HomeDashboard.this, "Please Input Name", Toast.LENGTH_SHORT).

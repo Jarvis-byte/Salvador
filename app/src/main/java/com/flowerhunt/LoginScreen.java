@@ -26,6 +26,9 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.flowerhunt.Model.UserDetails;
@@ -45,6 +48,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.json.JSONObject;
+
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -63,6 +68,7 @@ public class LoginScreen extends AppCompatActivity {
     EditText username_input, pass;
     ProgressBar progressBar;
     String userId, name;
+    String id;
     private GoogleSignInClient mGoogleSignInClient;
     private String TAG = "LoginScreen";
     private FirebaseAuth mAuth;
@@ -123,7 +129,9 @@ public class LoginScreen extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 showProgress();
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
+
                 handleFacebookAccessToken(loginResult.getAccessToken());
+
             }
 
             @Override

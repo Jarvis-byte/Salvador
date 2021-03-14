@@ -21,7 +21,7 @@
             android:layout_marginStart="15dp"
             android:background="@drawable/rounded_profile_textview"
             android:padding="5dp"
-            android:src="@drawable/man" />
+            android:src="@drawable/avater" />
 
         <Space
             android:layout_width="match_parent"
@@ -50,6 +50,7 @@
         android:textSize="20sp" />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/name"
@@ -90,21 +91,19 @@
 
 
     </androidx.core.widget.NestedScrollView>
-
-    <Button
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/click_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
+        android:layout_gravity="bottom|center"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/buttom_camera_back"
         android:drawableLeft="@drawable/ic_baseline_camera_24"
         android:drawablePadding="10dp"
         android:text="Click Image"
         android:textColor="#fff"
         android:textSize="20dp"
         app:backgroundTint="#7EB45C" />
-
 
 </RelativeLayout>

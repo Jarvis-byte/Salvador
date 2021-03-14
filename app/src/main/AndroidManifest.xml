@@ -10,17 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlowerHunt"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Profile"></activity>
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".HomeDashboard" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginScreen">
-
-        </activity>
+        <activity android:name=".LoginScreen"></activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

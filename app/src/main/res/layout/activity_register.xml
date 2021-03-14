@@ -38,7 +38,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/man"
+                        android:background="@drawable/avater"
                         android:padding="30dp" />
                 </androidx.cardview.widget.CardView>
 
