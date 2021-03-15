@@ -2,7 +2,8 @@
     <string name="app_name">Salvador</string>
     <string name="facebook_app_id">128247052531799</string>
     <string name="fb_login_protocol_scheme">fb128247052531799</string>
-
+    <string name="Api_Key">3T45ymgOqOW6aqaLaPcexSZy9</string>
+    <string name="Api_Secreat">N1W1MtwAm43ESKa5Gcf4KuxjqelAvdhQBSEeoMOAdxcBugB6J4</string>
     <string name="login_email_hint">Email</string>
     <string name="login_password_hint">Password</string>
 

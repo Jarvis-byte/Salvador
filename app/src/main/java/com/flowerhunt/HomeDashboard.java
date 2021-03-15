@@ -1,15 +1,18 @@
 package com.flowerhunt;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.transition.Fade;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,16 +45,30 @@ import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class HomeDashboard extends AppCompatActivity {
     public static final String MY_PREFS_NAME = "ProfilePic";
     public static final String MY_PREFS_NAME2 = "Name";
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final String SHOWCASE_ID = "50";
+    public Dialog mDialog;
     FirebaseAuth auth;
     FirebaseUser user;
     ImageView profile_pic, click_image_top;
@@ -60,7 +77,6 @@ public class HomeDashboard extends AppCompatActivity {
     RecyclerView recyclerView;
     MyAdapter myAdapter;
     ArrayList<FlowerList> list = new ArrayList<>();
-    String photoUrl;
     FirebaseFirestore mFirebaseFirestore = FirebaseFirestore.getInstance();
     String userId;
     String TAG = "FirebaseData";
@@ -136,49 +152,59 @@ public class HomeDashboard extends AppCompatActivity {
         });
         Log.i("Providers", String.valueOf(user.getProviderData()));
         editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-        if (auth.getCurrentUser().getPhotoUrl() != null) {
-            profilePicUrl = auth.getCurrentUser().getPhotoUrl().toString();
-            for (UserInfo profile : auth.getCurrentUser().getProviderData()) {
-                if (profile.getProviderId().equals("facebook.com")) {
+
+
+        String ProfilePic = prefs.getString("ProfilePic", "");
+        if (ProfilePic.equalsIgnoreCase("")) {
+            if (auth.getCurrentUser().getPhotoUrl() != null) {
+                profilePicUrl = auth.getCurrentUser().getPhotoUrl().toString();
+                for (UserInfo profile : auth.getCurrentUser().getProviderData()) {
+                    if (profile.getProviderId().equals("facebook.com")) {
 //                    String facebookUserId = profile.getUid();
-                    Bundle params = new Bundle();
-                    params.putString("fields", "id,picture.type(large)");
-                    new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
-                            new GraphRequest.Callback() {
-                                @Override
-                                public void onCompleted(GraphResponse response) {
-                                    if (response != null) {
-                                        try {
-                                            JSONObject data = response.getJSONObject();
-                                            if (data.has("picture")) {
-                                                profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
-                                                editor.putString("ProfilePic", profilePicUrl);
-                                                editor.apply();
-                                                Glide.with(HomeDashboard.this)
-                                                        .load(profilePicUrl)
-                                                        .fitCenter()
-                                                        .placeholder(R.drawable.avater)
-                                                        .into(profile_pic);
+                        Bundle params = new Bundle();
+                        params.putString("fields", "id,picture.type(large)");
+                        new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
+                                new GraphRequest.Callback() {
+                                    @Override
+                                    public void onCompleted(GraphResponse response) {
+                                        if (response != null) {
+                                            try {
+                                                JSONObject data = response.getJSONObject();
+                                                if (data.has("picture")) {
+                                                    profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
+                                                    editor.putString("ProfilePic", profilePicUrl);
+                                                    editor.apply();
+                                                    Glide.with(HomeDashboard.this)
+                                                            .load(profilePicUrl)
+                                                            .fitCenter()
+                                                            .placeholder(R.drawable.avater)
+                                                            .into(profile_pic);
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
                                         }
                                     }
-                                }
-                            }).executeAsync();
-                } else {
+                                }).executeAsync();
+                    } else {
 
-                    editor.putString("ProfilePic", profilePicUrl);
-                    editor.apply();
-                    Glide.with(HomeDashboard.this)
-                            .load(profilePicUrl)
-                            .fitCenter()
-                            .placeholder(R.drawable.avater)
-                            .into(profile_pic);
+                        editor.putString("ProfilePic", profilePicUrl);
+                        editor.apply();
+                        Glide.with(HomeDashboard.this)
+                                .load(profilePicUrl)
+                                .fitCenter()
+                                .placeholder(R.drawable.avater)
+                                .into(profile_pic);
+                    }
                 }
             }
-
-
+        } else {
+            Log.i("PROFILEPICHOME", ProfilePic);
+            Glide.with(HomeDashboard.this)
+                    .load(ProfilePic)
+                    .fitCenter()
+                    .placeholder(R.drawable.avater)
+                    .into(profile_pic);
         }
 
 
@@ -222,6 +248,27 @@ public class HomeDashboard extends AppCompatActivity {
 
             }
         });
+
+
+        //ShowCase One Time
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+
+        sequence.setConfig(config);
+
+        sequence.addSequenceItem(click_image,
+                "Click Image And be a Salvador", "GOT IT");
+
+        sequence.addSequenceItem(click_image_top,
+                "You can Be a Salvador from here ", "GOT IT");
+
+        sequence.addSequenceItem(profile_pic,
+                "Check your 'Profile' from here", "GOT IT");
+
+        sequence.start();
+
 
     }
 
@@ -276,8 +323,53 @@ public class HomeDashboard extends AppCompatActivity {
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] b = baos.toByteArray();
             String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+
+            Send_Base_sixty_four_image(encodedImage);
             Log.i("Base64", encodedImage);
-            profile_pic.setImageBitmap(imageBitmap);
+//            profile_pic.setImageBitmap(imageBitmap);
+        }
+    }
+
+    private void Send_Base_sixty_four_image(String encodedImage) {
+        showProgress();
+        okhttp3.OkHttpClient client = new OkHttpClient();
+        RequestBody formBody = new FormBody.Builder()
+                .add("passkey", "bgdguywfdkbqjgvdtfjduigdujyjwd766ew8762ghvghgwdd77ewy")
+                .add("imageString", encodedImage)
+                .build();
+        Request request = new Request.Builder()
+                .url("https://us-central1-digifit-staging-786b9.cloudfunctions.net/visionAPI")
+                .post(formBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.i("Failed", e.getLocalizedMessage());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String json = response.body().string();
+                Log.i("JSON", json);
+                hideProgress();
+            }
+        });
+    }
+
+    public void showProgress() {
+        mDialog = new Dialog(this);
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.setContentView(R.layout.custom_progress_layout);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCancelable(true);
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.show();
+    }
+
+    public void hideProgress() {
+        if (mDialog != null) {
+            mDialog.dismiss();
+            mDialog = null;
         }
     }
 }

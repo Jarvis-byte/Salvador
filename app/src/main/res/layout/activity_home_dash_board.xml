@@ -77,6 +77,7 @@
                     app:auto_cycle="true"
                     app:corner_radius="20"
                     app:delay="0"
+                    android:background="#F6F9F5"
                     app:error_image="@drawable/plant1"
                     app:period="3000" />
             </androidx.cardview.widget.CardView>
@@ -85,6 +86,7 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#F6F9F5"
                 android:layout_below="@+id/image_slider_card_layout"
                 android:layout_marginTop="10dp" />
 

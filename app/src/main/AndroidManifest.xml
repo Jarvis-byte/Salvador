@@ -10,7 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlowerHunt"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Profile"></activity>
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
+            >
+
+
+        </activity>
+        <activity android:name=".Profile" />
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,7 +26,7 @@
         </activity>
         <activity android:name=".HomeDashboard" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginScreen"></activity>
+        <activity android:name=".LoginScreen" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

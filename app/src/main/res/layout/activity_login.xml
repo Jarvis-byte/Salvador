@@ -273,6 +273,7 @@
                     app:cardCornerRadius="50dp">
 
                     <ImageView
+
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
@@ -280,33 +281,7 @@
                 </androidx.cardview.widget.CardView>
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/twitter_login"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/rounded_profile_textview"
-                android:padding="5dp">
 
-                <androidx.cardview.widget.CardView
-
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:padding="10dp"
-                    app:cardCornerRadius="50dp">
-
-                    <ImageView
-
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/twitter" />
-                </androidx.cardview.widget.CardView>
-            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 

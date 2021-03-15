@@ -26,9 +26,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.flowerhunt.Model.UserDetails;
@@ -38,6 +35,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -46,9 +44,9 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -58,7 +56,7 @@ public class LoginScreen extends AppCompatActivity {
 
     public Dialog mDialog;
     TextView new_user_login, greeting_message, welcome_back, btn_login, btn_forgot_password;
-    RelativeLayout gmail_login, twitter_login, RRfb, RL_Email, RL_Password;
+    RelativeLayout gmail_login, RRfb, RL_Email, RL_Password;
     ImageView fb, img_app_icon;
     float v = 0;
     LinearLayout LLExtraLogin;
@@ -69,9 +67,10 @@ public class LoginScreen extends AppCompatActivity {
     ProgressBar progressBar;
     String userId, name;
     String id;
+
     private GoogleSignInClient mGoogleSignInClient;
     private String TAG = "LoginScreen";
-    private FirebaseAuth mAuth;
+
     private int RC_SIGN_IN = 1;
     private CallbackManager callbackManager;
     private LoginButton loginButton;
@@ -84,8 +83,9 @@ public class LoginScreen extends AppCompatActivity {
         new_user_login = findViewById(R.id.new_user_login);
         gmail_login = findViewById(R.id.gmail_login);
         fb = findViewById(R.id.fb);
+
         greeting_message = findViewById(R.id.greeting_message);
-        twitter_login = findViewById(R.id.twitter_login);
+
         RRfb = findViewById(R.id.RRfb);
         LLExtraLogin = findViewById(R.id.LLExtraLogin);
         img_app_icon = findViewById(R.id.img_app_icon);
@@ -105,7 +105,7 @@ public class LoginScreen extends AppCompatActivity {
 
         WelcomeMessage();
 
-        mAuth = FirebaseAuth.getInstance();
+
         //Google Login
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -171,6 +171,8 @@ public class LoginScreen extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
     private void Login_using_email() {
@@ -198,7 +200,7 @@ public class LoginScreen extends AppCompatActivity {
     private void animate() {
         RRfb.setTranslationY(300);
         gmail_login.setTranslationY(300);
-        twitter_login.setTranslationY(300);
+
         LLExtraLogin.setTranslationY(300);
         img_app_icon.setTranslationY(300);
         greeting_message.setTranslationY(300);
@@ -211,7 +213,7 @@ public class LoginScreen extends AppCompatActivity {
 
         RRfb.setAlpha(v);
         gmail_login.setAlpha(v);
-        twitter_login.setAlpha(v);
+
         LLExtraLogin.setAlpha(v);
         img_app_icon.setAlpha(v);
         greeting_message.setAlpha(v);
@@ -224,7 +226,6 @@ public class LoginScreen extends AppCompatActivity {
 
         RRfb.animate().translationY(0).alpha(1).setDuration(1500).setStartDelay(400).start();
         gmail_login.animate().translationY(0).alpha(1).setDuration(1500).setStartDelay(400).start();
-        twitter_login.animate().translationY(0).alpha(1).setDuration(1500).setStartDelay(400).start();
         LLExtraLogin.animate().translationY(0).alpha(1).setDuration(1500).setStartDelay(400).start();
         img_app_icon.animate().translationY(0).alpha(1).setDuration(1500).setStartDelay(400).start();
         greeting_message.animate().translationY(0).alpha(1).setDuration(1500).setStartDelay(400).start();
@@ -275,13 +276,13 @@ public class LoginScreen extends AppCompatActivity {
         Log.d(TAG, "handleFacebookAccessToken:" + accessToken);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
-        mAuth.signInWithCredential(credential)
+        auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-                            userId = mAuth.getCurrentUser().getUid();
+                            userId = auth.getCurrentUser().getUid();
                             UserDetails userDetails = new UserDetails(name, userId);
                             database.collection("Users")
                                     .document(userId).set(userDetails).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -316,6 +317,8 @@ public class LoginScreen extends AppCompatActivity {
         }
     }
 
+
+
     private void signIN() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -330,6 +333,7 @@ public class LoginScreen extends AppCompatActivity {
             showProgress();
             handleSignResult(task);
         }
+
     }
 
     private void handleSignResult(Task<GoogleSignInAccount> task) {
@@ -347,12 +351,12 @@ public class LoginScreen extends AppCompatActivity {
     private void FirebaseGoogleAuth(GoogleSignInAccount acc) {
 
         AuthCredential authCredential = GoogleAuthProvider.getCredential(acc.getIdToken(), null);
-        mAuth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        auth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-                    userId = mAuth.getCurrentUser().getUid();
+                    userId = auth.getCurrentUser().getUid();
                     UserDetails userDetails = new UserDetails(name, userId);
 
                     database.collection("Users")
@@ -379,7 +383,7 @@ public class LoginScreen extends AppCompatActivity {
         finish();
     }
 
-    private void showProgress() {
+    public void showProgress() {
         mDialog = new Dialog(this);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mDialog.setContentView(R.layout.custom_progress_layout);
@@ -389,7 +393,7 @@ public class LoginScreen extends AppCompatActivity {
         mDialog.show();
     }
 
-    private void hideProgress() {
+    public void hideProgress() {
         if (mDialog != null) {
             mDialog.dismiss();
             mDialog = null;
