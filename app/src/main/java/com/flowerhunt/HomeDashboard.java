@@ -44,8 +44,12 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -84,6 +88,9 @@ public class HomeDashboard extends AppCompatActivity {
     NestedScrollView scrollView;
     SharedPreferences.Editor editor;
     SharedPreferences prefs;
+    List<String> listDB = new ArrayList<>();
+    String sImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -317,26 +324,43 @@ public class HomeDashboard extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] b = baos.toByteArray();
-            String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+            Log.i("DATA", String.valueOf(data));
+            try {
+//                final Uri imageUri = data.getData();
+//                Log.i("URI", String.valueOf(imageUri));
+                Bundle extras = data.getExtras();
+                Bitmap bitmap = (Bitmap) extras.get("data");
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] bytes = stream.toByteArray();
+                sImage = Base64.encodeToString(bytes, Base64.NO_WRAP);
+//                Log.i("BASE64", sImage);
+                // name.setText(sImage);
+                profile_pic.setImageBitmap(bitmap);
 
-            Send_Base_sixty_four_image(encodedImage);
-            Log.i("Base64", encodedImage);
-//            profile_pic.setImageBitmap(imageBitmap);
+//                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+//                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+//                String encodedImage = encodeImage(selectedImage);
+                Send_Base_sixty_four_image(sImage);
+            } catch (Exception e) {
+                Log.i("EXCEPTION", e.toString());
+
+            }
+
+
         }
     }
 
+
     private void Send_Base_sixty_four_image(String encodedImage) {
         showProgress();
+
         okhttp3.OkHttpClient client = new OkHttpClient();
         RequestBody formBody = new FormBody.Builder()
                 .add("passkey", "bgdguywfdkbqjgvdtfjduigdujyjwd766ew8762ghvghgwdd77ewy")
                 .add("imageString", encodedImage)
                 .build();
+        Log.d("BASE64", encodedImage);
         Request request = new Request.Builder()
                 .url("https://us-central1-digifit-staging-786b9.cloudfunctions.net/visionAPI")
                 .post(formBody)
@@ -351,6 +375,51 @@ public class HomeDashboard extends AppCompatActivity {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String json = response.body().string();
                 Log.i("JSON", json);
+                mFirebaseFirestore.collection("CollectionOfFlowers").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                listDB.add(document.getId());
+                            }
+
+                            Log.d(TAG, listDB.toString());
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+                try {
+                    JSONObject jsonObject = new JSONObject(json);
+                    JSONArray jsonArray = jsonObject.getJSONArray("label");
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        Log.i("Label", jsonArray.getString(i));
+                        if (listDB.contains(jsonArray.getString(i))) {
+
+                            Log.i("Contains", jsonArray.getString(i));
+                            String nameofFlower = jsonArray.getString(i);
+
+                            HomeDashboard.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(HomeDashboard.this, nameofFlower.toUpperCase()  + " Flower Detected", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+                        } else {
+                            Log.i("Contains", "Nothing");
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.i("ERROR", e.toString());
+                }
+
+
                 hideProgress();
             }
         });
